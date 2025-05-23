@@ -1,0 +1,22 @@
+[
+    {
+      "model": "main.modelcv",
+      "pk": 1,
+      "fields": {
+        "firstname": "Brad",
+        "lastname": "Pitt",
+        "bio": "Award-winning actor with experience in action, drama, and production.",
+        "skills": ["Acting", "Production", "Public Speaking"],
+        "projects": [
+          "Fight Club - A cult classic psychological thriller.",
+"Once Upon a Time in Hollywood - A Quentin Tarantino film set in 1969 Los Angeles."
+        ],
+        "contacts": {
+          "email": "brad.pitt@example.com",
+          "agent": "Hollywood Talent Agency",
+          "imdb": "https://www.imdb.com/"
+        }
+      }
+    }
+  ]
+  
