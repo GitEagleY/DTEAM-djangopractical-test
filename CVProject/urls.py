@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import CVDetailView, CVListView,recent_requests, settings_view
+from main.views import CVDetailView, CVListView,recent_requests, settings_view,generate_pdf
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -47,4 +47,7 @@ urlpatterns = [
     path("logs/", recent_requests, name="recent_requests"),
     
     path("settings/", settings_view, name="settings"),
+    
+    
+    path("cv/<int:pk>/pdf/", generate_pdf, name="cv-pdf"),
 ]
