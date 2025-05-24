@@ -96,6 +96,13 @@
         font-weight: 300;
       }
 
+      .nav-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+      }
+
       .log-btn {
         background: var(--bg-secondary);
         color: var(--text-primary);
@@ -132,6 +139,10 @@
         content: "📊";
         font-size: 1.1rem;
         transition: transform 0.2s ease;
+      }
+
+      .log-btn[href*="settings"]::after {
+        content: "⚙️";
       }
 
       .log-btn:hover {
@@ -369,7 +380,12 @@
         <h1>CV Portfolio</h1>
         <p>Professional profiles and resumes</p>
       </header>
-      <a href="{% url 'recent_requests' %}" class="log-btn">View Request Log</a>
+      <div class="nav-buttons">
+        <a href="{% url 'recent_requests' %}" class="log-btn"
+          >View Request Log</a
+        >
+        <a href="{% url 'settings' %}" class="log-btn">View Settings</a>
+      </div>
       {% if object_list %}
       <div class="stats">
         <div class="stat-item">

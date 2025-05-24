@@ -1,8 +1,8 @@
 from django.views.generic.detail import DetailView
 from django.views.generic.list import ListView
-
-from .models import ModelCV,RequestLog
 from django.shortcuts import  render
+from .models import ModelCV,RequestLog
+
 
 
 class CVDetailView(DetailView):
@@ -24,3 +24,6 @@ def recent_requests(request):
         "main/request_log_list.html",
         {"logs": logs}
     )
+    
+def settings_view(request):
+    return render(request, "main/template_settings.html")
