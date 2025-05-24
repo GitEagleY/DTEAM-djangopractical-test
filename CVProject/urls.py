@@ -18,12 +18,29 @@ from django.contrib import admin
 from django.urls import path
 from main.views import CVDetailView, CVListView
 
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
+from main.api_views import (
+    CVAPIView, CVDetailedAPIView)
+
 urlpatterns = [
     path(
-        "cv/<int:pk>/",#example: cv/1/
+        "cv/<int:pk>/",  # example: cv/1/
         CVDetailView.as_view(),
         name="template_detail"
     ),
     path('admin/', admin.site.urls),
     path("", CVListView.as_view(), name="template_list"),
+
+     path('api/cvs/', CVAPIView.as_view(),
+         name='api-cv-list'),
+    path('api/cvs/<int:pk>/', CVDetailedAPIView.as_view(),
+         name='api-cv-detail'),
+    
+    path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
+    path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-swagger-ui'),
+    path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='api-schema'), name='api-redoc'),
 ]
