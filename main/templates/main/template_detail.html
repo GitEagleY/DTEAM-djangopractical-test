@@ -204,6 +204,65 @@
         font-size: 0.9rem;
       }
 
+      .button-container {
+        display: flex;
+        gap: 1rem;
+        margin-top: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 1.75rem;
+        background: var(--gradient);
+        color: white;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 15px rgba(100, 181, 246, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .download-btn::before {
+        content: "⬇";
+        font-size: 1.1rem;
+        transition: transform 0.2s ease;
+      }
+
+      .download-btn::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s ease;
+      }
+
+      .download-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(100, 181, 246, 0.4);
+      }
+
+      .download-btn:hover::before {
+        transform: translateY(2px);
+      }
+
+      .download-btn:hover::after {
+        left: 100%;
+      }
+
       .back-link {
         display: inline-flex;
         align-items: center;
@@ -299,7 +358,16 @@
         </section>
       </div>
 
-      <a href="{% url 'template_list' %}" class="back-link"> Back to List </a>
+      {% if not pdf_mode %}
+      <div class="button-container">
+        <a href="{% url 'cv-pdf' pk=object.id %}" class="download-btn">
+          Download as PDF
+        </a>
+        <a href="{% url 'template_list' %}" class="back-link">
+          Back to List
+        </a>
+      </div>
+      {% endif %}
     </div>
   </body>
 </html>
