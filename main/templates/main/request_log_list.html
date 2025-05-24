@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CV Portfolio</title>
+    <title>Request Log</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -96,59 +96,6 @@
         font-weight: 300;
       }
 
-      .log-btn {
-        background: var(--bg-secondary);
-        color: var(--text-primary);
-        padding: 1rem 2rem;
-        text-decoration: none;
-        border-radius: 0.75rem;
-        font-weight: 500;
-        font-size: 1rem;
-        border: 1px solid var(--border-subtle);
-        box-shadow: 0 4px 20px var(--shadow);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.75rem;
-        margin-bottom: 2rem;
-      }
-
-      .log-btn::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: var(--gradient);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-        transform-origin: left;
-      }
-
-      .log-btn::after {
-        content: "📊";
-        font-size: 1.1rem;
-        transition: transform 0.2s ease;
-      }
-
-      .log-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 32px var(--shadow);
-        border-color: var(--accent-blue);
-        color: var(--accent-cyan);
-      }
-
-      .log-btn:hover::before {
-        transform: scaleX(1);
-      }
-
-      .log-btn:hover::after {
-        transform: rotate(10deg) scale(1.1);
-      }
-
       .section-header {
         margin-bottom: 2rem;
       }
@@ -176,106 +123,170 @@
         font-size: 1.1rem;
       }
 
-      .cv-grid {
-        display: grid;
-        gap: 1.5rem;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        list-style: none;
-      }
-
-      .cv-card {
+      .table-container {
         background: var(--bg-secondary);
         border-radius: 1rem;
         padding: 2rem;
         border: 1px solid var(--border-subtle);
         box-shadow: 0 4px 20px var(--shadow);
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
+        overflow-x: auto;
+        margin-bottom: 2rem;
       }
 
-      .cv-card::before {
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.9rem;
+      }
+
+      th {
+        background: var(--bg-tertiary);
+        color: var(--accent-cyan);
+        padding: 1rem 1.5rem;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid var(--border-subtle);
+        position: relative;
+      }
+
+      th::after {
         content: "";
         position: absolute;
-        top: 0;
+        bottom: 0;
         left: 0;
         right: 0;
-        height: 4px;
+        height: 2px;
         background: var(--gradient);
-        transform: scaleX(0);
-        transition: transform 0.3s ease;
-        transform-origin: left;
       }
 
-      .cv-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 40px var(--shadow);
-        border-color: var(--accent-blue);
-      }
-
-      .cv-card:hover::before {
-        transform: scaleX(1);
-      }
-
-      .cv-link {
-        text-decoration: none;
-        color: inherit;
-        display: block;
-        width: 100%;
-        height: 100%;
-      }
-
-      .cv-name {
-        font-size: 1.5rem;
-        font-weight: 600;
+      td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-subtle);
         color: var(--text-primary);
-        margin-bottom: 0.75rem;
-        transition: color 0.2s ease;
+        transition: background-color 0.2s ease;
       }
 
-      .cv-card:hover .cv-name {
+      tr:hover td {
+        background-color: rgba(100, 181, 246, 0.05);
+      }
+
+      .method {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .method-get {
+        background: rgba(77, 208, 225, 0.2);
         color: var(--accent-cyan);
+        border: 1px solid var(--accent-cyan);
       }
 
-      .cv-meta {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        font-family: "JetBrains Mono", monospace;
-      }
-
-      .cv-meta::before {
-        content: "→";
+      .method-post {
+        background: rgba(100, 181, 246, 0.2);
         color: var(--accent-blue);
-        font-size: 1.2rem;
-        transition: transform 0.2s ease;
+        border: 1px solid var(--accent-blue);
       }
 
-      .cv-card:hover .cv-meta::before {
-        transform: translateX(4px);
+      .method-put {
+        background: rgba(255, 193, 7, 0.2);
+        color: #ffc107;
+        border: 1px solid #ffc107;
       }
 
-      .no-cvs {
+      .method-delete {
+        background: rgba(244, 67, 54, 0.2);
+        color: #f44336;
+        border: 1px solid #f44336;
+      }
+
+      .timestamp {
+        color: var(--text-secondary);
+        font-size: 0.85rem;
+      }
+
+      .path {
+        color: var(--text-primary);
+        font-weight: 500;
+      }
+
+      .no-logs {
         text-align: center;
         padding: 4rem 2rem;
         background: var(--bg-secondary);
         border-radius: 1rem;
         border: 1px solid var(--border-subtle);
         color: var(--text-muted);
+        margin-bottom: 2rem;
       }
 
-      .no-cvs-icon {
+      .no-logs-icon {
         font-size: 4rem;
         margin-bottom: 1rem;
         opacity: 0.5;
       }
 
-      .no-cvs h3 {
+      .no-logs h3 {
         font-size: 1.5rem;
         margin-bottom: 0.5rem;
         color: var(--text-secondary);
+      }
+
+      .back-btn {
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        padding: 1rem 2rem;
+        text-decoration: none;
+        border-radius: 0.75rem;
+        font-weight: 500;
+        font-size: 1rem;
+        border: 1px solid var(--border-subtle);
+        box-shadow: 0 4px 20px var(--shadow);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .back-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--gradient);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+        transform-origin: left;
+      }
+
+      .back-btn::after {
+        content: "←";
+        font-size: 1.2rem;
+        transition: transform 0.2s ease;
+      }
+
+      .back-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px var(--shadow);
+        border-color: var(--accent-blue);
+        color: var(--accent-cyan);
+      }
+
+      .back-btn:hover::before {
+        transform: scaleX(1);
+      }
+
+      .back-btn:hover::after {
+        transform: translateX(-4px);
       }
 
       .stats {
@@ -309,24 +320,10 @@
         letter-spacing: 0.5px;
       }
 
-      /* Loading animation for empty state */
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 1;
-        }
-        50% {
-          opacity: 0.5;
-        }
-      }
-
-      .loading {
-        animation: pulse 2s infinite;
-      }
-
       /* Scrollbar styling */
       ::-webkit-scrollbar {
         width: 8px;
+        height: 8px;
       }
 
       ::-webkit-scrollbar-track {
@@ -343,10 +340,6 @@
       }
 
       @media (max-width: 768px) {
-        .cv-grid {
-          grid-template-columns: 1fr;
-        }
-
         .stats {
           gap: 1rem;
         }
@@ -356,9 +349,22 @@
           min-width: 100px;
         }
 
-        .log-btn {
+        .back-btn {
           padding: 0.75rem 1.5rem;
           font-size: 0.9rem;
+        }
+
+        .table-container {
+          padding: 1rem;
+        }
+
+        th,
+        td {
+          padding: 0.75rem 1rem;
+        }
+
+        table {
+          font-size: 0.8rem;
         }
       }
     </style>
@@ -366,42 +372,61 @@
   <body>
     <div class="container">
       <header>
-        <h1>CV Portfolio</h1>
-        <p>Professional profiles and resumes</p>
+        <h1>Request Log</h1>
+        <p>System activity and request monitoring</p>
       </header>
-      <a href="{% url 'recent_requests' %}" class="log-btn">View Request Log</a>
-      {% if object_list %}
+
+      {% if logs %}
       <div class="stats">
         <div class="stat-item">
-          <span class="stat-number">{{ object_list|length }}</span>
+          <span class="stat-number">{{ logs|length }}</span>
           <span class="stat-label"
-            >Profile{{ object_list|length|pluralize }}</span
+            >Recent Request{{ logs|length|pluralize }}</span
           >
         </div>
       </div>
 
       <div class="section-header">
-        <h2>Available Profiles</h2>
-        <p>Browse through our collection of professional CVs and portfolios</p>
+        <h2>Last 10 Requests</h2>
+        <p>Monitor recent system activity and HTTP requests</p>
       </div>
 
-      <ul class="cv-grid">
-        {% for cv in object_list %}
-        <li class="cv-card">
-          <a href="{% url 'template_detail' pk=cv.id %}" class="cv-link">
-            <div class="cv-name">{{ cv.firstname }} {{ cv.lastname }}</div>
-            <div class="cv-meta">View Profile</div>
-          </a>
-        </li>
-        {% endfor %}
-      </ul>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Method</th>
+              <th>Path</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in logs %}
+            <tr>
+              <td class="timestamp">{{ log.timestamp }}</td>
+              <td>
+                <span class="method method-{{ log.http_method|lower }}">
+                  {{ log.http_method }}
+                </span>
+              </td>
+              <td class="path">{{ log.path }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       {% else %}
-      <div class="no-cvs">
-        <div class="no-cvs-icon">📄</div>
-        <h3>No CVs Available</h3>
-        <p>There are currently no CV profiles to display. Check back later!</p>
+      <div class="no-logs">
+        <div class="no-logs-icon">📊</div>
+        <h3>No Requests Logged</h3>
+        <p>
+          No requests have been logged yet. Activity will appear here once
+          requests are made.
+        </p>
       </div>
       {% endif %}
+
+      <a href="{% url 'template_list' %}" class="back-btn">Back to CV List</a>
     </div>
   </body>
 </html>

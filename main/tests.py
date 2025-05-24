@@ -5,10 +5,46 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 import json
 
-from .models import ModelCV, validate_list_of_strings, validate_dict_of_strings
+from .models import ModelCV, validate_list_of_strings, validate_dict_of_strings,RequestLog
 from .serializers import CVSerializer
+from django.utils.timezone import now
 
+class RequestLogTests(TestCase):
+    def setUp(self):
+        self.client = Client()
 
+    def test_middleware_logs_request(self):
+        # This should trigger the middleware and log the request
+        self.client.get("/")
+        log = RequestLog.objects.last()
+
+        self.assertIsNotNone(log)
+        self.assertEqual(log.http_method, "GET")
+        self.assertEqual(log.path, "/")
+
+    def test_recent_requests_view_displays_logs(self):
+        # Create a log manually
+        RequestLog.objects.create(http_method="GET", path="/test/", timestamp=now())
+        response = self.client.get(reverse("recent_requests"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "/test/")
+        self.assertTemplateUsed(response, "main/request_log_list.html")
+
+    def test_admin_url_does_not_log(self):
+        self.client.get("/admin/")
+        self.assertFalse(RequestLog.objects.exists())
+
+    def test_url_patterns_resolve(self):
+        response = self.client.get(reverse("template_list"))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get(reverse("api-cv-list"))
+        self.assertEqual(response.status_code, 200)
+
+        # Assuming pk=1 exists or you handle 404 gracefully
+        response = self.client.get(reverse("api-cv-detail", kwargs={"pk": 1}))
+        self.assertIn(response.status_code, [200, 404])
 class ModelCVTestCase(TestCase):
     """Test cases for ModelCV model"""
     

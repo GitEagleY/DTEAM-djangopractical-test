@@ -1,7 +1,12 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from typing import Any, Dict, List
+from typing import Any
 
+class RequestLog(models.Model):
+    timestamp = models.DateTimeField(auto_now_add=True)
+    http_method  = models.CharField(null=False, blank=False, max_length=10)
+    path = models.CharField(null=False, blank=False, max_length=260)
+    
 class ModelCV(models.Model):
     firstname = models.CharField(max_length=100)
     lastname = models.CharField(max_length=100)

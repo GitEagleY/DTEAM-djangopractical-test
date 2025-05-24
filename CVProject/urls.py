@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import CVDetailView, CVListView
+from main.views import CVDetailView, CVListView,recent_requests
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -43,4 +43,6 @@ urlpatterns = [
     path('api/schema/', SpectacularAPIView.as_view(), name='api-schema'),
     path('api/docs/swagger/', SpectacularSwaggerView.as_view(url_name='api-schema'), name='api-swagger-ui'),
     path('api/docs/redoc/', SpectacularRedocView.as_view(url_name='api-schema'), name='api-redoc'),
+    
+    path("logs/", recent_requests, name="recent_requests"),
 ]
