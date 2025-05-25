@@ -15,7 +15,7 @@ from weasyprint import HTML
 from .models import ModelCV, RequestLog
 from .tasks import send_cv_pdf_email
 
-
+from .helper import translate_text
 class CVDetailView(DetailView):
     model = ModelCV
     template_name = 'main/template_detail.html'
@@ -105,3 +105,19 @@ def send_cv_email(request, pk):
             'status': 'error',
             'message': f'An error occurred: {str(e)}'
         }, status=500)
+        
+def translate_cv(request, pk):
+    try:
+        payload = json.loads(request.body)
+        target_language = payload.get("language")
+
+        if not target_language:
+            return JsonResponse({"error": "Language not specified."}, status=400)
+
+        translated_text = translate_text(pk, target_language)
+        return JsonResponse({"translated_text": translated_text})
+
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON payload."}, status=400)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)

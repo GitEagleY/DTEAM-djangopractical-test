@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main.views import CVDetailView, CVListView, recent_requests, settings_view, generate_pdf, send_cv_email
+from main.views import CVDetailView, CVListView, recent_requests, settings_view, generate_pdf, send_cv_email, translate_cv
 
 from drf_spectacular.views import (
     SpectacularAPIView,
@@ -51,4 +51,7 @@ urlpatterns = [
     path("cv/<int:pk>/pdf/", generate_pdf, name="cv-pdf"),
     
     path("cv/<int:pk>/send-email/", send_cv_email, name="cv-send-email"),
+    
+    path('cv/<int:pk>/translate/', translate_cv, name='translate_cv')
+    
 ]

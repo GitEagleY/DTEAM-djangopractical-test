@@ -25,6 +25,7 @@
         --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         --success-color: #4ade80;
         --error-color: #f87171;
+        --warning-color: #fbbf24;
       }
 
       * {
@@ -370,6 +371,122 @@
         }
       }
 
+      /* Translation section styles */
+      .translation-section {
+        background: var(--bg-tertiary);
+        border: 1px solid var(--border-subtle);
+        margin-top: 2rem;
+        box-shadow: 0 4px 20px var(--shadow);
+      }
+
+      .translation-section::before {
+        background: linear-gradient(
+          135deg,
+          var(--warning-color) 0%,
+          var(--accent-cyan) 100%
+        );
+      }
+
+      .translation-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .translation-input-group {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .language-selector {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid var(--border-subtle);
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: var(--bg-secondary);
+        color: var(--text-primary);
+        cursor: pointer;
+      }
+
+      .language-selector:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+        box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.1);
+      }
+
+      .translate-btn {
+        padding: 12px 24px;
+        background: linear-gradient(
+          135deg,
+          var(--warning-color) 0%,
+          var(--accent-cyan) 100%
+        );
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        min-width: 120px;
+        box-shadow: 0 4px 20px var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .translate-btn::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .translate-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 32px var(--shadow);
+      }
+
+      .translate-btn:hover:not(:disabled)::before {
+        left: 100%;
+      }
+
+      .translate-btn:disabled {
+        background: var(--bg-secondary);
+        cursor: not-allowed;
+        color: var(--text-muted);
+        border: 1px solid var(--border-subtle);
+      }
+
+      /* Reset button styles */
+      .reset-btn {
+        padding: 8px 16px;
+        background: var(--bg-secondary);
+        color: var(--text-secondary);
+        border: 1px solid var(--border-subtle);
+        border-radius: 0.5rem;
+        font-weight: 400;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+      }
+
+      .reset-btn:hover {
+        background: var(--bg-tertiary);
+        color: var(--text-primary);
+        border-color: var(--accent-blue);
+      }
+
       /* Scrollbar styling */
       ::-webkit-scrollbar {
         width: 8px;
@@ -394,11 +511,13 @@
           padding: 1rem;
         }
 
-        .email-input-group {
+        .email-input-group,
+        .translation-input-group {
           flex-direction: column;
         }
 
-        .email-input {
+        .email-input,
+        .language-selector {
           width: 100%;
         }
 
@@ -413,18 +532,20 @@
   <body>
     <div class="container">
       <header>
-        <h1>{{ object.firstname }} {{ object.lastname }}</h1>
+        <h1 id="cv-title">{{ object.firstname }} {{ object.lastname }}</h1>
       </header>
 
-      <div class="main-content">
+      <div class="main-content" id="cv-content">
         <section class="section bio-section">
           <h3>Biography</h3>
-          <div class="bio"><strong>About:</strong> {{ object.bio }}</div>
+          <div class="bio">
+            <strong>About:</strong> <span id="bio-text">{{ object.bio }}</span>
+          </div>
         </section>
 
         <section class="section">
           <h3>Skills</h3>
-          <ul class="item-list">
+          <ul class="item-list" id="skills-list">
             {% for skill in object.skills %}
             <li>{{ skill }}</li>
             {% endfor %}
@@ -433,7 +554,7 @@
 
         <section class="section">
           <h3>Projects</h3>
-          <ul class="item-list">
+          <ul class="item-list" id="projects-list">
             {% for project in object.projects %}
             <li>{{ project }}</li>
             {% endfor %}
@@ -442,7 +563,7 @@
 
         <section class="section">
           <h3>Contact Information</h3>
-          <ul class="item-list contacts-list">
+          <ul class="item-list contacts-list" id="contacts-list">
             {% for key, value in object.contacts.items %}
             <li>
               <strong>{{ key }}:</strong>
@@ -453,6 +574,72 @@
         </section>
 
         {% if not pdf_mode %}
+        <section class="section translation-section">
+          <h3>Translate CV</h3>
+          <div class="translation-form">
+            <div class="translation-input-group">
+              <select class="language-selector" id="language-selector">
+                <option value="">Select a language...</option>
+                <option value="Cornish">Cornish</option>
+                <option value="Manx">Manx</option>
+                <option value="Breton">Breton</option>
+                <option value="Inuktitut">Inuktitut</option>
+                <option value="Kalaallisut">Kalaallisut</option>
+                <option value="Romani">Romani</option>
+                <option value="Occitan">Occitan</option>
+                <option value="Ladino">Ladino</option>
+                <option value="Northern Sami">Northern Sami</option>
+                <option value="Upper Sorbian">Upper Sorbian</option>
+                <option value="Kashubian">Kashubian</option>
+                <option value="Zazaki">Zazaki</option>
+                <option value="Livonian">Livonian</option>
+                <option value="Tsakonian">Tsakonian</option>
+                <option value="Saramaccan">Saramaccan</option>
+                <option value="Bislama">Bislama</option>
+                <option value="Spanish">Spanish</option>
+                <option value="French">French</option>
+                <option value="German">German</option>
+                <option value="Italian">Italian</option>
+                <option value="Portuguese">Portuguese</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Korean">Korean</option>
+                <option value="Arabic">Arabic</option>
+              </select>
+              <button
+                type="button"
+                class="translate-btn"
+                id="translate-btn"
+                onclick="translateContent()"
+              >
+                <span class="btn-text">Translate</span>
+              </button>
+            </div>
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <button
+                type="button"
+                class="reset-btn"
+                id="reset-btn"
+                onclick="resetToOriginal()"
+                style="display: none"
+              >
+                Reset to Original
+              </button>
+              <div
+                id="translation-status"
+                class="status-message"
+                style="display: none; margin: 0"
+              ></div>
+            </div>
+          </div>
+        </section>
+
         <section class="section email-section">
           <h3>Send CV via Email</h3>
           <form class="email-form" id="emailForm">
@@ -491,7 +678,21 @@
 
     {% if not pdf_mode %}
     <script>
+      // Store original content for reset functionality
+      let originalContent = {
+        title: "{{ object.firstname }} {{ object.lastname }}",
+        bio: "{{ object.bio|escapejs }}",
+        skills: [{% for skill in object.skills %}"{{ skill|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+        projects: [{% for project in object.projects %}"{{ project|escapejs }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+        contacts: {
+          {% for key, value in object.contacts.items %}
+          "{{ key|escapejs }}": "{{ value|escapejs }}"{% if not forloop.last %},{% endif %}
+          {% endfor %}
+        }
+      };
+
       document.addEventListener("DOMContentLoaded", function () {
+        // Email form functionality
         const form = document.getElementById("emailForm");
         const emailInput = document.getElementById("recipientEmail");
         const sendBtn = document.getElementById("sendBtn");
@@ -568,6 +769,163 @@
           }, 5000);
         }
       });
+
+      // Translation functionality
+      async function translateContent() {
+        const languageSelector = document.getElementById("language-selector");
+        const translateBtn = document.getElementById("translate-btn");
+        const translationStatus = document.getElementById("translation-status");
+        const resetBtn = document.getElementById("reset-btn");
+        const selectedLanguage = languageSelector.value;
+
+        if (!selectedLanguage) {
+          showTranslationMessage("Please select a language", "error");
+          return;
+        }
+
+        // Set loading state
+        setTranslationLoading(true);
+
+        try {
+          const response = await fetch(`/cv/{{ object.id }}/translate/`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+            },
+            body: JSON.stringify({ language: selectedLanguage }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok && data.translated_text) {
+            updateContentWithTranslation(data.translated_text);
+            showTranslationMessage(`CV translated to ${selectedLanguage}`, "success");
+            resetBtn.style.display = "block";
+          } else {
+            showTranslationMessage(data.error || "Translation failed", "error");
+          }
+        } catch (error) {
+          console.error("Translation error:", error);
+          showTranslationMessage("Network error occurred. Please try again.", "error");
+        } finally {
+          setTranslationLoading(false);
+        }
+      }
+
+      function updateContentWithTranslation(translatedData) {
+        // Update title
+        if (translatedData.firstname && translatedData.lastname) {
+          document.getElementById("cv-title").textContent =
+            `${translatedData.firstname} ${translatedData.lastname}`;
+        }
+
+        // Update bio
+        if (translatedData.bio) {
+          document.getElementById("bio-text").textContent = translatedData.bio;
+        }
+
+        // Update skills
+        if (translatedData.skills && Array.isArray(translatedData.skills)) {
+          const skillsList = document.getElementById("skills-list");
+          skillsList.innerHTML = "";
+          translatedData.skills.forEach(skill => {
+            const li = document.createElement("li");
+            li.textContent = skill;
+            skillsList.appendChild(li);
+          });
+        }
+
+        // Update projects
+        if (translatedData.projects && Array.isArray(translatedData.projects)) {
+          const projectsList = document.getElementById("projects-list");
+          projectsList.innerHTML = "";
+          translatedData.projects.forEach(project => {
+            const li = document.createElement("li");
+            li.textContent = project;
+            projectsList.appendChild(li);
+          });
+        }
+
+        // Update contacts
+        if (translatedData.contacts && typeof translatedData.contacts === 'object') {
+          const contactsList = document.getElementById("contacts-list");
+          contactsList.innerHTML = "";
+          Object.entries(translatedData.contacts).forEach(([key, value]) => {
+            const li = document.createElement("li");
+            li.innerHTML = `<strong>${key}:</strong> <span>${value}</span>`;
+            contactsList.appendChild(li);
+          });
+        }
+      }
+
+      function resetToOriginal() {
+        // Reset title
+        document.getElementById("cv-title").textContent = originalContent.title;
+
+        // Reset bio
+        document.getElementById("bio-text").textContent = originalContent.bio;
+
+        // Reset skills
+        const skillsList = document.getElementById("skills-list");
+        skillsList.innerHTML = "";
+        originalContent.skills.forEach(skill => {
+          const li = document.createElement("li");
+          li.textContent = skill;
+          skillsList.appendChild(li);
+        });
+
+        // Reset projects
+        const projectsList = document.getElementById("projects-list");
+        projectsList.innerHTML = "";
+        originalContent.projects.forEach(project => {
+          const li = document.createElement("li");
+          li.textContent = project;
+          projectsList.appendChild(li);
+        });
+
+        // Reset contacts
+        const contactsList = document.getElementById("contacts-list");
+        contactsList.innerHTML = "";
+        Object.entries(originalContent.contacts).forEach(([key, value]) => {
+          const li = document.createElement("li");
+          li.innerHTML = `<strong>${key}:</strong> <span>${value}</span>`;
+          contactsList.appendChild(li);
+        });
+
+        // Reset UI
+        document.getElementById("language-selector").value = "";
+        document.getElementById("reset-btn").style.display = "none";
+        document.getElementById("translation-status").style.display = "none";
+        showTranslationMessage("CV reset to original language", "success");
+      }
+
+      function setTranslationLoading(loading) {
+        const translateBtn = document.getElementById("translate-btn");
+        const languageSelector = document.getElementById("language-selector");
+        const btnText = translateBtn.querySelector(".btn-text");
+
+        translateBtn.disabled = loading;
+        languageSelector.disabled = loading;
+
+        if (loading) {
+          btnText.innerHTML = '<span class="loading"></span> Translating...';
+        } else {
+          btnText.textContent = "Translate";
+        }
+      }
+
+      function showTranslationMessage(message, type) {
+        const translationStatus = document.getElementById("translation-status");
+        translationStatus.textContent = message;
+        translationStatus.className = `status-message status-${type}`;
+        translationStatus.style.display = "block";
+
+        // Hide message after 5 seconds
+        setTimeout(() => {
+          translationStatus.style.display = "none";
+        }, 5000);
+      }
     </script>
     {% endif %}
   </body>
