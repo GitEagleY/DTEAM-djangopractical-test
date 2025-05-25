@@ -6,13 +6,17 @@ authors = [
     {name = "Your Name",email = "you@example.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.12,<4"
 dependencies = [
     "django (>=5.2.1,<6.0.0)",
     "djangorestframework (>=3.16.0,<4.0.0)",
     "drf-spectacular (>=0.28.0,<0.29.0)",
     "python-dotenv (>=1.1.0,<2.0.0)",
-    "psycopg2-binary (>=2.9.10,<3.0.0)"
+    "psycopg2-binary (>=2.9.10,<3.0.0)",
+    "celery (>=5.5.2,<6.0.0)",
+    "redis (>=6.1.0,<7.0.0)",
+    "reportlab (>=4.4.1,<5.0.0)",
+    "weasyprint (>=65.1,<66.0)"
 ]
 
 

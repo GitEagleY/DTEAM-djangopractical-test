@@ -10,12 +10,12 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y \
-        postgresql-client \
-        build-essential \
-        libpq-dev \
-        gcc 
+    postgresql-client \
+    build-essential \
+    libpq-dev \
+    gcc 
 
-    
+
 
 # Install Poetry
 RUN pip install --no-cache-dir poetry
@@ -27,12 +27,19 @@ COPY pyproject.toml poetry.lock /app/
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-root
 
-    
+
 # Copy the entire project
 COPY . /app/
 
 RUN poetry run python manage.py makemigrations
 
+
+
+# Create a non-root user
+#RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
+#USER appuser
 # Expose ports
 EXPOSE 8000
 
+# Run the application
+#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "your_project_name.wsgi:application"]

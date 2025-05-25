@@ -34,3 +34,5 @@ logs/
 old/
 
 Byte-compiled / optimized / DLL files
+
+celerybeat-schedule

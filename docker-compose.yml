@@ -15,11 +15,30 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"  # SMTP server
+      - "8025:8025"  # Web UI
+    restart: unless-stopped
+
   web:
     build: .
     command: >
       sh -c "
       python manage.py migrate &&
+      python manage.py loaddata main/fixtures/sample_cv.json&&
       python manage.py runserver 0.0.0.0:8000
       "
     volumes:
@@ -32,6 +51,32 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  celery:
+    build: .
+    command: sh -c "python manage.py migrate && celery -A CVProject worker --loglevel=info"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    restart: unless-stopped
+
+  celery-beat:
+    build: .
+    command: sh -c "celery -A CVProject beat --loglevel=info"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
     restart: unless-stopped
 
 volumes:
