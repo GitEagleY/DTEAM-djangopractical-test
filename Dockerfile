@@ -1,21 +1,21 @@
-FROM python:3.12
+FROM python:3.12-slim
 
 # Set environment variables
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SETTINGS_MODULE=CVProject.settings.production
 
 # Set work directory
 WORKDIR /app
 
 # Install system dependencies
 RUN apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
     postgresql-client \
     build-essential \
     libpq-dev \
-    gcc 
-
-
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
 RUN pip install --no-cache-dir poetry
@@ -23,23 +23,30 @@ RUN pip install --no-cache-dir poetry
 # Copy project dependencies
 COPY pyproject.toml poetry.lock /app/
 
-# Install dependencies
+# Configure Poetry and install dependencies
 RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi --no-root
-
+    && poetry install --no-interaction --no-ansi --no-root --only=main
 
 # Copy the entire project
 COPY . /app/
 
-RUN poetry run python manage.py makemigrations
+# Create non-root user
+RUN adduser --disabled-password --gecos '' appuser \
+    && chown -R appuser:appuser /app \
+    && chmod +x /app/entrypoint.sh
 
+# Switch to non-root user
+USER appuser
 
+# Create directories for static and media files
+RUN mkdir -p /app/staticfiles /app/media
 
-# Create a non-root user
-#RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
-#USER appuser
-# Expose ports
+# Expose port
 EXPOSE 8000
 
-# Run the application
-#CMD ["gunicorn", "--bind", "0.0.0.0:8000", "your_project_name.wsgi:application"]
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health/ || exit 1
+
+# Use entrypoint script
+ENTRYPOINT ["/app/entrypoint.sh"]
